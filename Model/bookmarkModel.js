@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const moment = require('moment')
 const bookmarkSchema = new mongoose.Schema({
+    productId:{type:String},
     title:{type:String,required:true,trim:true,unique:true},
     quantity:{type:Number,required:true,default:1},
     priority:{type:Number,required:true},

@@ -28,15 +28,37 @@ const getApi = async(req,res)=>{
     }
 };
 
-const bookmarkApi = async(req,res)=>{
-    const {id} = req.params;
+const getBookApi = async(req,res)=>{
     try {
-        let products = await BookmarkProduct.create(id);
-        return res.status(200).send({message:'BookMark Data Displayed',products})
+        const products = await BookmarkProduct.find({});
+       return res.status(200).send(products);
     } catch (error) {
         res.status(500).send(error.message)
     }
-};
+}
+const bookmarkApi = async(req,res)=>{
+    const {id} = req.params;
+    const { Title, Quantity, Priority, Description} = req.body;
+    const findID = await ShoppingModel.find({ _id: id });
+        if (findID) {
+            try {
+              const bookmarkProduct =await BookmarkProduct.create({
+                Title,
+                Quantity,
+                Priority,
+                Description,
+                productId: id,
+              });
+        
+              bookmarkProduct.save();
+              return res.status(200).send(bookmarkProduct);
+            } catch (err) {
+              res.status(500).send(err.message);
+            }
+          } else {
+            res.status(403).send({ msg: "Product List is not here" });
+          }
+        }
 
 const deleteApi = async(req,res)=>{
     const {id} = req.params;
@@ -48,4 +70,4 @@ const deleteApi = async(req,res)=>{
     }
 };
 
-module.exports = {createApi,getApi,bookmarkApi,deleteApi}
+module.exports = {createApi,getApi,getBookApi,bookmarkApi,deleteApi}
